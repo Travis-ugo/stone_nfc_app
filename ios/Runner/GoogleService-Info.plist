@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1362674123-fhhkk69pktorq65nq6f7hm0mmmbru3io.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1362674123-fhhkk69pktorq65nq6f7hm0mmmbru3io</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1362674123-o1in9hln81cetfoh5t5m6ij4o8lr4snm.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAdcedQ-DxC3E5AxCHWplXxPEXH64iVp-0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1362674123</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.stone.anaconda</string>
+	<key>PROJECT_ID</key>
+	<string>driven-development-3e69a</string>
+	<key>STORAGE_BUCKET</key>
+	<string>driven-development-3e69a.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1362674123:ios:93fbea1093f0d582ff364e</string>
+</dict>
+</plist>
