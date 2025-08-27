@@ -42,13 +42,13 @@ class LoginForm extends StatelessWidget {
                             ? FontWeightMade.medium
                             : FontWeightMade.bold,
                         fontSize: rSize(FontSize.x3l, FontSize.x4l),
-                        textColor: BlackColors.black_500,
+                        textColor: Theme.of(context).colorScheme.onBackground,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         gap: 16.h,
                         subWidget: Text(
                           'Welcome back!',
                           style: TextStyle(
-                            color: GreyColors.grey_700,
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontWeight: FontWeightMade.regular,
                             fontSize: rSize(FontSize.sm, FontSize.base),
                           ),
@@ -156,7 +156,7 @@ class _LoginButton extends StatelessWidget {
           childWidget: isInProgress
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [const CircularProgressIndicator()],
+                  children: [const CircularProgressIndicator(strokeWidth: 0.5, color: GreyColors.grey_100,)],
                 )
               : null,
           onTap: state.isValid && !state.status.isInProgress
@@ -179,7 +179,7 @@ class _SignUpButton extends StatelessWidget {
         text: TextSpan(
           text: 'Don’t have an account? ',
           style: TextStyle(
-            color: const Color(0xff333333),
+            // color: const Color(0xff333333),
             fontWeight: FontWeightMade.regular,
             fontSize: rSize(FontSize.xs, FontSize.base),
             fontFamily: 'Poppins',
@@ -238,7 +238,7 @@ class _GoogleLoginButton extends StatelessWidget {
               Text(
                 'Continue with Google',
                 style: TextStyle(
-                  color: BlackColors.black_500,
+                  color: Theme.of(context).colorScheme.onBackground,
                   fontSize: FontSize.sm,
                   fontWeight: FontWeightMade.regular,
                 ),

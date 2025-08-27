@@ -13,7 +13,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:tag_play/core/services/shorebird_updater.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized(); 
+  WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = const AppBlocObserver();
 
   await Firebase.initializeApp();

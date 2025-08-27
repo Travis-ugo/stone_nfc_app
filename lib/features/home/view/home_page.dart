@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:storage_repository/storage_repository.dart';
 import 'package:tag_play/core/core.dart';
+import 'package:tag_play/features/profile/profile_bloc.dart';
 import 'package:tag_play/features/watched_history/bloc/watched_history_bloc.dart';
 import 'package:tag_play/presentation/app/bloc/app_bloc.dart';
 import 'package:tag_play/features/home/bloc/home_bloc.dart';
-import 'package:tag_play/features/home/widgets/avatar.dart';
 import 'package:tag_play/presentation/navigation/routes.dart';
 import 'package:tag_play/core/services/nfc_service.dart';
 
@@ -30,6 +30,11 @@ class AuthenticatedRoute extends StatelessWidget {
           create: (context) => WatchedHistoryBloc(
             storageRepository: context.read<StorageRepositoryImpl>(),
           )..add(WatchHistoryRequested(userId: user.id)),
+        ),
+        BlocProvider(
+          create: (context) => ProfileBloc(
+            storageRepository: context.read<StorageRepositoryImpl>(),
+          )..add(ProfileRequested(user.id)),
         ),
       ],
       child: MaterialApp.router(
@@ -88,9 +93,6 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final user = context.select((AppBloc bloc) => bloc.state.user);
-
     return MultiBlocListener(
       listeners: [
         BlocListener<HomeBloc, HomeState>(
@@ -106,6 +108,11 @@ class _HomeViewState extends State<HomeView> {
               context.push(
                 '/video/${state.video!.videoId}?url=${Uri.encodeComponent(state.video!.url)}&title=${Uri.encodeComponent(state.video!.title)}&thumbnailUrl=${Uri.encodeComponent(state.video!.thumbnailUrl!)}',
               );
+            } else if (state.status == HomeStatus.failure &&
+                state.errorMessage != null) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
             }
           },
         ),
@@ -122,8 +129,18 @@ class _HomeViewState extends State<HomeView> {
       ],
       child: Scaffold(
         appBar: AppBar(
-          title: Image.asset('assets/images/tagplay-logo.png', height: 126),
+          centerTitle: true,
+          title: Image.asset(
+            'assets/images/logo.png',
+            color: BlackColors.black_500,
+            height: 70,
+          ),
+
           backgroundColor: Colors.transparent,
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(8.0),
+            child: SizedBox(),
+          ),
           elevation: 0,
           actions: <Widget>[
             BlocBuilder<HomeBloc, HomeState>(
@@ -163,83 +180,104 @@ class _HomeViewState extends State<HomeView> {
             ),
             IconButton(
               key: const Key('homePage_scan_iconButton'),
-              icon: const Icon(
-                Icons.qr_code_scanner,
-                color: PrimaryColor.primary_400,
-              ),
+              icon: SvgPicture.asset('assets/icons/scan.svg', height: 28.h),
               onPressed: () => _pickMediaFile(context),
             ),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Avatar(photo: user.photo),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Welcome back!', style: textTheme.titleLarge),
-                            const SizedBox(height: 4),
-                            Text(
-                              user.name ?? user.email ?? 'User',
-                              style: textTheme.bodyLarge?.copyWith(
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/home_background.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 2),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Image.asset('assets/images/logo.png', height: 190.h),
+                // Card(
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(16.0),
+                //     child: Row(
+                //       children: [
+                //         Avatar(photo: user.photo),
+                //         const SizedBox(width: 16),
+                //         Expanded(
+                //           child: Column(
+                //             crossAxisAlignment: CrossAxisAlignment.start,
+                //             children: [
+                //               Text(
+                //                 'Welcome back!',
+                //                 style: textTheme.titleLarge,
+                //               ),
+                //               const SizedBox(height: 4),
+                //               Text(
+                //                 user.name ?? user.email ?? 'User',
+                //                 style: textTheme.bodyLarge?.copyWith(
+                //                   color: Colors.grey[600],
+                //                 ),
+                //               ),
+                //             ],
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+
+                // const SizedBox(height: 24),
+
+                // Quick actions header
+                // Text(
+                //   'Quick Actions',
+                //   style: textTheme.titleLarge?.copyWith(
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                // ),
+                // const SizedBox(height: 16),
+
+                // Quick actions cards
+                // Row(
+                //   children: [
+                //     Expanded(
+                //       child: _buildActionCard(
+                //         context,
+                //         icon: Icons.qr_code_scanner,
+                //         title: 'Scan NFC',
+                //         subtitle: 'Scan a tag to play video',
+
+                //         onTap: () => _scanNfcAndFetch(),
+                //       ),
+                //     ),
+                //     const SizedBox(width: 16),
+                Expanded(
+                  child: _buildActionCard(
+                    context,
+                    iconPath: 'assets/icons/scan.svg',
+                    title: 'Enter Token',
+                    subtitle: 'Enter NFC token manually',
+                    onTap: () => context.push('/enter-token'),
                   ),
                 ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Quick actions header
-              Text(
-                'Quick Actions',
-                style: textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+                //   ],
+                // ),
+                Center(
+                  child: _buildActionCard(
+                    context,
+                    iconPath: 'assets/icons/scan.svg',
+                    title: 'Scan NFC',
+                    subtitle: 'Scan a tag to\nplay video',
+                    onTap: () => _scanNfcAndFetch(),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-
-              // Quick actions cards
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildActionCard(
-                      context,
-                      icon: Icons.qr_code_scanner,
-                      title: 'Scan NFC',
-                      subtitle: 'Scan a tag to play video',
-
-                      onTap: () => _scanNfcAndFetch(),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildActionCard(
-                      context,
-                      icon: Icons.edit,
-                      title: 'Enter Token',
-                      subtitle: 'Enter NFC token manually',
-                      onTap: () => context.push('/enter-token'),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -248,26 +286,43 @@ class _HomeViewState extends State<HomeView> {
 
   Widget _buildActionCard(
     BuildContext context, {
-    required IconData icon,
+    required String iconPath,
     required String title,
     required String subtitle,
     required VoidCallback onTap,
   }) {
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: BlackColors.black_500, width: 1),
+      ),
+      color: Color.fromARGB(255, 243, 232, 202),
+      elevation: 4,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           child: Column(
             children: [
-              Icon(icon, size: 32, color: PrimaryColor.primary_500),
-              const SizedBox(height: 8),
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+              SvgPicture.asset(iconPath, height: 18),
               const SizedBox(height: 4),
               Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeightMade.bold,
+                  color: BlackColors.black_500,
+                  fontSize: FontSize.xs,
+                ),
+              ),
+              const SizedBox(height: 3),
+              Text(
                 subtitle,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                style: TextStyle(
+                  fontSize: FontSize.xs,
+                  color: Colors.grey[600],
+                  fontWeight: FontWeightMade.semiBold,
+                ),
                 textAlign: TextAlign.center,
               ),
             ],

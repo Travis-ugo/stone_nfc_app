@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDEqb5-TD28JhMDrf6poAPw3w16NcRhBxo',
-    appId: '1:1362674123:android:8947381cd6132b81ff364e',
+    appId: '1:1362674123:android:edeb24d8da842084ff364e',
     messagingSenderId: '1362674123',
     projectId: 'driven-development-3e69a',
     storageBucket: 'driven-development-3e69a.appspot.com',
@@ -59,13 +59,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAdcedQ-DxC3E5AxCHWplXxPEXH64iVp-0',
-    appId: '1:1362674123:ios:93fbea1093f0d582ff364e',
+    appId: '1:1362674123:ios:e75bcef10f84345fff364e',
     messagingSenderId: '1362674123',
     projectId: 'driven-development-3e69a',
     storageBucket: 'driven-development-3e69a.appspot.com',
     androidClientId: '1362674123-o1in9hln81cetfoh5t5m6ij4o8lr4snm.apps.googleusercontent.com',
-    iosClientId: '1362674123-fhhkk69pktorq65nq6f7hm0mmmbru3io.apps.googleusercontent.com',
-    iosBundleId: 'com.stone.anaconda',
+    iosClientId: '1362674123-f2mir5e7nes712idh9qqlt98kt288gvn.apps.googleusercontent.com',
+    iosBundleId: 'com.stone.nfc',
   );
 
 }

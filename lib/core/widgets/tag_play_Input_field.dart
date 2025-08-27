@@ -66,7 +66,7 @@ class _TagPlayInputFieldState extends State<TagPlayInputField> {
                     widget.labelStyle ??
                     TextStyle(
                       fontSize: rSize(FontSize.sm, FontSize.base),
-                      color: GreyColors.grey_700,
+                      color: GreyColors.grey_500,
                       fontWeight: FontWeightMade.regular,
                     ),
               )

@@ -172,6 +172,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1362674123:android:edeb24d8da842084ff364e",
+        "android_client_info": {
+          "package_name": "com.stone.nfc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1362674123-h32vpvov18o0t8f7lv48hhpge2e5281o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEqb5-TD28JhMDrf6poAPw3w16NcRhBxo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1362674123-h32vpvov18o0t8f7lv48hhpge2e5281o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1362674123-7aokjd1ddnmq6edsgrksgr8m9cd9t8gu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.projectkey.theKey"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

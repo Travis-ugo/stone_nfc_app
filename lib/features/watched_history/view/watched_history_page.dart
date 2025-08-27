@@ -1,27 +1,28 @@
-import 'package:tag_play/features/home/bloc/home_bloc.dart';
 import 'package:tag_play/features/watched_history/bloc/watched_history_bloc.dart';
 import 'package:tag_play/features/watched_history/widgets/watch_history_card.dart';
-import 'package:tag_play/presentation/app/bloc/app_bloc.dart';
 import '../../../core/core.dart';
+import 'package:tag_play/presentation/app/bloc/app_bloc.dart';
 
-/// {@template watched_history_page}
-/// Page that displays the user's video watch history
-/// {@endtemplate}
 class WatchedHistoryPage extends StatelessWidget {
-  /// {@macro watched_history_page}
   const WatchedHistoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final user = context.select((AppBloc bloc) => bloc.state.user);
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Watch History'),
-        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        title: Image.asset(
+          'assets/images/logo.png',
+          color: Theme.of(context).colorScheme.onBackground,
+          height: 70,
+        ),
+        backgroundColor: WhiteColors.white_100,
         elevation: 0,
       ),
       body: RefreshIndicator.adaptive(
-        color: BlackColors.black_600,
+        color: Theme.of(context).colorScheme.primary,
         onRefresh: () async {
           context.read<WatchedHistoryBloc>().add(
             WatchHistoryRequested(userId: user.id),
@@ -33,11 +34,7 @@ class WatchedHistoryPage extends StatelessWidget {
   }
 }
 
-/// {@template watched_history_view}
-/// View that displays the watch history content
-/// {@endtemplate}
-class WatchedHistoryView extends StatelessWidget {
-  /// {@macro watched_history_view}
+class WatchedHistoryView extends StatelessWidget { 
   const WatchedHistoryView({super.key});
 
   @override
@@ -47,9 +44,13 @@ class WatchedHistoryView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Recently Watched',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          Text(
+            'Watched History',
+            style: TextStyle(
+              fontSize: FontSize.lg,
+              fontWeight: FontWeight.bold,
+              color: WhiteColors.white_100,
+            ),
           ),
           const VSpaceWidget(height: 16),
           Expanded(
@@ -72,14 +73,16 @@ class WatchedHistoryView extends StatelessWidget {
                         const VSpaceWidget(height: 16),
                         Text(
                           'Failed to load watch history',
-                          style: Theme.of(context).textTheme.titleMedium,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
                         ),
                       ],
                     ),
                   );
                 }
                 if (state.isSuccess) {
-                  final watchHistory = state.watchHistory ?? [];
+                  final watchHistory = state.watchHistory;
 
                   if (watchHistory.isEmpty) {
                     return Center(
@@ -94,13 +97,16 @@ class WatchedHistoryView extends StatelessWidget {
                           const VSpaceWidget(height: 16),
                           Text(
                             'No watch history yet',
-                            style: Theme.of(context).textTheme.titleMedium,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onBackground,
+                            ),
                           ),
                           const VSpaceWidget(height: 8),
                           Text(
                             'Videos you watch will appear here',
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(color: Colors.grey),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
                           ),
                         ],
                       ),
@@ -115,8 +121,6 @@ class WatchedHistoryView extends StatelessWidget {
                     },
                   );
                 }
-
-                // Fallback for initial state or unhandled states
                 return const SizedBox.shrink();
               },
             ),

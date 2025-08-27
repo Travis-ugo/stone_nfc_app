@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tag_play/core/core.dart';
+import 'package:tag_play/features/profile/view/edit_profile_page.dart';
 import 'view/main_navigation_page.dart';
 import '../../features/home/home.dart';
 import '../../features/home/view/nfc_write_page.dart';
@@ -28,7 +29,7 @@ class AppRouter {
           final videoId = state.pathParameters['videoId']!;
           final videoUrl = state.uri.queryParameters['url'] ?? '';
           final videoTitle = state.uri.queryParameters['title'] ?? '';
-          final  thumbnailUrl = state.uri.queryParameters['thumbnailUrl'] ?? '';
+          final thumbnailUrl = state.uri.queryParameters['thumbnailUrl'] ?? '';
 
           return VideoPlayerPage(
             videoId: videoId,
@@ -57,6 +58,13 @@ class AppRouter {
         },
       ),
 
+      GoRoute(
+        path: '/edit_profile',
+        name: 'edit_profile',
+        pageBuilder: (context, state) {
+          return MaterialPage(child: const EditProfilePage());
+        },
+      ),
       // Main navigation with bottom bar
       ShellRoute(
         builder: (context, state, child) {

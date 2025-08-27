@@ -2,19 +2,17 @@ flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   min_sdk_android: 21
-  adaptive_icon_background: "#E9EDFF"  # Background color
-  image_path:  "assets/images/blue-logo.png" 
+  adaptive_icon_background: "#010101"  # Background color
+  image_path:  "assets/images/logo.png" 
   # adaptive_icon_foreground: "assets/images/reiv9-background.png" # Foreground image
   remove_alpha_ios: true
-  background_color_ios: "#E9EDFF"  
+  background_color_ios: "#010101"  
 
 flutter_native_splash:
   ios: true
   android: true
   web: false
-  color: "#E9EDFF"  
-  # background_image: "assets/images/hands.png"
-  # branding_mode: bottom
+  color: "#010101"
+  image: "assets/images/logo.png"
+  # branding: "assets/images/brand.png"
   # branding_bottom_padding: 26
-  image: "assets/images/tagplay-logo.png"
-  # branding:  "assets/images/brand.png"

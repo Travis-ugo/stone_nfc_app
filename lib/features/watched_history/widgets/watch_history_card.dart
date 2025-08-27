@@ -13,6 +13,7 @@ class WatchHistoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
+      elevation: 0,
       child: ListTile(
         leading: Container(
           width: 60,
@@ -51,6 +52,7 @@ class WatchHistoryCard extends StatelessWidget {
         title: Text(
           'Video ${history.video.videoId}',
           style: const TextStyle(fontWeight: FontWeight.w600),
+          maxLines: 2,
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

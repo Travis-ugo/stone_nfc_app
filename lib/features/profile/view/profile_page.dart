@@ -1,56 +1,109 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:storage_repository/storage_repository.dart';
 import 'package:tag_play/presentation/app/bloc/app_bloc.dart';
 import '../../../core/core.dart';
+import '../profile_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final user = context.select((AppBloc bloc) => bloc.state.user);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
-        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        title: Image.asset(
+          'assets/images/logo.png',
+          color: Theme.of(context).colorScheme.onBackground,
+          height: 70,
+        ),
+        backgroundColor: Colors.white,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(8.0),
+          child: SizedBox(),
+        ),
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              // TODO: Navigate to settings
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Settings coming soon')),
-              );
-            },
-          ),
-        ],
       ),
-      body: const ProfileView(),
+      backgroundColor: Colors.black,
+      body: BlocProvider(
+        create: (context) => ProfileBloc(storageRepository: context.read<StorageRepositoryImpl>())
+          ..add(ProfileRequested(user.id)),
+        child: const ProfileView(),
+      ),
     );
   }
 }
 
 class ProfileView extends StatelessWidget {
-  /// {@macro profile_view}
   const ProfileView({super.key});
 
   @override
   Widget build(BuildContext context) {
     final user = context.select((AppBloc bloc) => bloc.state.user);
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      builder: (context, state) {
+        if (state is ProfileLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is ProfileLoaded) {
+          final profile = state.profile;
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                ProfileAvatar(
+                  name: profile.displayName ?? user.name ?? user.email ?? 'User',
+                  email: profile.email ?? user.email ?? '',
+                  profileImage: profile.photoUrl ?? user.photo,
+                ),
+                const SizedBox(height: 24),
+                Card(
+                  elevation: 0,
+                  color: Colors.transparent,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Profile Information',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+    
+                            color: GreyColors.grey_100,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        _buildInfoRow(context, 'Display Name', profile.displayName ?? '-'),
+                        _buildInfoRow(context, 'Email', profile.email ?? '-'),
+                        _buildInfoRow(context, 'Phone', profile.phoneNumber ?? '- - - - - - - -'),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                const ProfileActions(),
+              ],
+            ),
+          );
+        } else if (state is ProfileError) {
+          return Center(child: Text('Error: \\${state.message}', style: TextStyle(color: Theme.of(context).colorScheme.error)));
+        }
+        return const SizedBox();
+      },
+    );
+  }
+
+  Widget _buildInfoRow(BuildContext context, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(height: 20),
-          ProfileAvatar(
-            name: user.name ?? user.email ?? 'User',
-            email: user.email ?? '',
-            profileImage: user.photo,
-          ),
-          const SizedBox(height: 24),
-          ProfileInfo(userId: user.id),
-          const SizedBox(height: 32),
-          const ProfileActions(),
+          Text(label, style: TextStyle(fontWeight: FontWeightMade.regular, color: GreyColors.grey_200, fontSize: FontSize.sm)),
+          Text(value, style: TextStyle(fontWeight: FontWeightMade.medium, color: GreyColors.grey_500, fontSize: FontSize.sm)),
         ],
       ),
     );
@@ -73,7 +126,7 @@ class ProfileAvatar extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          profileImage != null
+          (profileImage != null && profileImage!.isNotEmpty)
               ? CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.grey[200],
@@ -81,122 +134,41 @@ class ProfileAvatar extends StatelessWidget {
                   child: ClipOval(
                     child: CachedNetworkImage(
                       imageUrl: profileImage!,
-                      width: 50,
-                      height: 50,
+                      width: 100,
+                      height: 100,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => const Icon(
-                        Icons.person_outline,
-                        size: 50,
-                        color: Colors.grey,
-                      ),
-                      errorWidget: (context, url, error) => const Icon(
-                        Icons.error,
-                        size: 50,
-                        color: Colors.redAccent,
-                      ),
+                      placeholder: (context, url) => const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
                   ),
                 )
               : CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.grey[300],
-                  child: const Icon(Icons.person, size: 50, color: Colors.grey),
+                  child: Text(
+                    email.isNotEmpty ? email[0].toUpperCase() : 'U',
+                    style: const TextStyle(fontSize: 40, color: Colors.grey),
+                  ),
                 ),
-
           const SizedBox(height: 16),
           Text(
             name,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: FontSize.xl, fontWeight: FontWeightMade.bold, color: GreyColors.grey_100),
           ),
           const SizedBox(height: 4),
-          Text(email, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+          Text(email, style: TextStyle(fontSize: FontSize.base, color: GreyColors.grey_400)),
         ],
       ),
     );
   }
 }
 
-/// {@template profile_info}
-/// Widget that displays user profile information
-/// {@endtemplate}
-class ProfileInfo extends StatelessWidget {
-  /// {@macro profile_info}
-  const ProfileInfo({super.key, required this.userId});
-  final String userId;
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<UserProfileEntity?>(
-      future: context
-          .read<StorageRepositoryImpl>()
-          .getUserProfile(userId: userId)
-          .then((e) => e.getOrElse(() => null)),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final profile = snapshot.data;
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Profile Information',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-                _buildInfoRow('Display Name', profile?.displayName ?? '-'),
-                _buildInfoRow('Email', profile?.email ?? '-'),
-                _buildInfoRow('Phone', profile?.phoneNumber ?? '-'),
-                _buildInfoRow(
-                  'Member Since',
-                  profile?.createdAt != null
-                      ? _formatDate(profile!.createdAt!)
-                      : '-',
-                ),
-                _buildInfoRow(
-                  'Last Login',
-                  profile?.lastLoginAt != null
-                      ? _formatDate(profile!.lastLoginAt!)
-                      : '-',
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
-          Text(value, style: TextStyle(color: Colors.grey[600])),
-        ],
-      ),
-    );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-  }
-}
-
-/// {@template profile_actions}
-/// Widget that displays profile action buttons
-/// {@endtemplate}
 class ProfileActions extends StatelessWidget {
-  /// {@macro profile_actions}
   const ProfileActions({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final user = context.select((AppBloc bloc) => bloc.state.user);
     return Column(
       children: [
         _buildActionTile(
@@ -204,9 +176,14 @@ class ProfileActions extends StatelessWidget {
           icon: Icons.edit,
           title: 'Edit Profile',
           onTap: () {
-            // TODO: Navigate to edit profile
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Edit profile coming soon')),
+            context.pushNamed(
+              'edit_profile',
+              extra: {
+                'userId': user.id,
+                'currentName': user.name,
+                'currentPhotoUrl': user.photo,
+                'currentEmail': user.email,
+              },
             );
           },
         ),
@@ -254,6 +231,7 @@ class ProfileActions extends StatelessWidget {
     bool isDestructive = false,
   }) {
     return Card(
+      color: GreyColors.grey_50,
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: Icon(icon, color: isDestructive ? Colors.red : null),

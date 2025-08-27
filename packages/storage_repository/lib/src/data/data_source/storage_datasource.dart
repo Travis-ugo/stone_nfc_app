@@ -171,11 +171,14 @@ class StorageDataSourceImpl implements StorageDatasource {
           .limit(1)
           .get();
 
-      if (query.docs.isEmpty) return null;
-
+      print('${query.docs}');
+      if (query.docs.isEmpty) throw Exception('Token Does Not Exist');
       final docData = query.docs.first.data();
       return VideoModel.fromJson(docData);
     } catch (e) {
+      if (e.toString().contains('Token Does Not Exist')) {
+        throw Exception('Token Does Not Exist');
+      }
       throw Exception('Failed to get video by NFC token: $e');
     }
   }
@@ -222,6 +225,11 @@ class StorageDataSourceImpl implements StorageDatasource {
     } catch (e) {
       throw Exception('Failed to update watch history: $e');
     }
+  }
+
+  // Add a public method for uploading profile images
+  Future<String> uploadFile(String filePath, String storagePath) {
+    return _uploadFile(filePath, storagePath);
   }
 
   // ----------------- Helpers -----------------

@@ -2,10 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
-
 		<key>NFCReaderUsageDescription</key>
 		<string>This app uses NFC to scan and write NFC tags.</string>
-
 		<key>NSLocalNetworkUsageDescription</key>
 		<string>This app requires access to the local network for debugging.</string>
 		<key>NSCameraUsageDescription</key>
@@ -20,28 +18,21 @@
 		<string>This app needs local network access for debugging purposes.</string>
 		<key>NSUserTrackingUsageDescription</key>
 		<string>This app uses your device identifier to improve user experience.</string>
-
 		<!-- Camera access (for taking photos/videos) -->
 		<key>NSCameraUsageDescription</key>
 		<string>This app needs access to the camera to take photos and videos.</string>
-
 		<!-- Microphone access (for recording video with audio) -->
 		<key>NSMicrophoneUsageDescription</key>
 		<string>This app needs access to the microphone when recording videos.</string>
-
 		<!-- Photo library access (to select images/videos) -->
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>This app needs access to your photo library to select images and videos.</string>
-
 		<!-- Photo library add access (to save media back to gallery) -->
 		<key>NSPhotoLibraryAddUsageDescription</key>
 		<string>This app needs permission to save photos and videos to your photo library.</string>
-
 		<!-- Local network (if your app needs local device connections) -->
 		<key>NSLocalNetworkUsageDescription</key>
 		<string>This app requires access to the local network for debugging and device communication.</string>
-
-
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
@@ -87,23 +78,18 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
-
 		<key>GIDClientID</key>
-		<string>1362674123-fhhkk69pktorq65nq6f7hm0mmmbru3io.apps.googleusercontent.com</string>
-
+		<string>1362674123-f2mir5e7nes712idh9qqlt98kt288gvn.apps.googleusercontent.com</string>
 		<key>CFBundleURLTypes</key>
-
 		<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-			<string>com.googleusercontent.apps.1362674123-fhhkk69pktorq65nq6f7hm0mmmbru3io</string>
-			</array>
-		</dict>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>com.googleusercontent.apps.1362674123-f2mir5e7nes712idh9qqlt98kt288gvn</string>
+				</array>
+			</dict>
 		</array>
-
-
 	</dict>
 </plist>

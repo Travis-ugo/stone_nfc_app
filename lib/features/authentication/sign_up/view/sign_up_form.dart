@@ -29,18 +29,18 @@ class SignUpForm extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TitleAndSubWidget(
-              title: 'Create Account',
+              title: 'Sign Up',
               fontWeight: isTabletGlobal
                   ? FontWeightMade.medium
                   : FontWeightMade.bold,
               fontSize: rSize(FontSize.x3l, FontSize.x4l),
-              textColor: BlackColors.black_500,
+              textColor: Theme.of(context).colorScheme.onBackground,
               crossAxisAlignment: CrossAxisAlignment.start,
               gap: 16.h,
               subWidget: Text(
-                'Please remember that you will need this to sometimes to access your account',
+                'Create your account',
                 style: TextStyle(
-                  color: GreyColors.grey_700,
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeightMade.regular,
                   fontSize: rSize(FontSize.sm, FontSize.base),
                 ),
@@ -179,8 +179,8 @@ class _SignUpButton extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const CircularProgressIndicator(
-                      color: BlackColors.black_500,
-                      strokeWidth: 2,
+                      strokeWidth: 0.5,
+                      color: GreyColors.grey_100,
                     ),
                   ],
                 )
@@ -223,7 +223,7 @@ class _GoogleSignupButton extends StatelessWidget {
               Text(
                 'Continue with Google',
                 style: TextStyle(
-                  color: BlackColors.black_500,
+                  color: Theme.of(context).colorScheme.onBackground,
                   fontSize: FontSize.sm,
                   fontWeight: FontWeightMade.regular,
                 ),

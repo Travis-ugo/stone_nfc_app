@@ -37,6 +37,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       ); 
       result.fold(
         (failure) {
+          print('failure: $failure');
           emit(
             state.copyWith(
               status: HomeStatus.failure,
@@ -45,6 +46,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           );
         },
         (video) {
+          print('video: $video');
           emit(state.copyWith(status: HomeStatus.success, video: video));
         },
       );

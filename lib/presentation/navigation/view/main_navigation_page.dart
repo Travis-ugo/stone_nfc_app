@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tag_play/core/utils/color_palettes/black_colors.dart';
 import '../widgets/bottom_navigation_bar.dart'; 
 
 /// {@template main_navigation_page}

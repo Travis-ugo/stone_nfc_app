@@ -9,115 +9,6 @@ import 'package:nfc_manager_ndef/nfc_manager_ndef.dart';
 
 import 'package:tag_play/core/core.dart';
 
-// class NfcService {
-//   /// Scan and read NFC tag content
-//   Future<String?> scanNfcTag() async {
-//     if (!await NfcManager.instance.isAvailable()) return null;
-
-//     final completer = Completer<String?>();
-
-//     await NfcManager.instance.startSession(
-//       pollingOptions: {NfcPollingOption.iso14443},
-//       onDiscovered: (NfcTag tag) async {
-//         try {
-//           final ndef = Ndef.from(tag);
-//           if (ndef != null && ndef.cachedMessage != null) {
-//             final records = ndef.cachedMessage!.records;
-//             if (records.isNotEmpty) {
-//               final NdefRecord first = records.first;
-//               String? text;
-//               // Decode NDEF Text record (type 'T') if applicable
-//               final typeString = utf8.decode(first.type);
-//               if (first.typeNameFormat == TypeNameFormat.wellKnown && typeString == 'T') {
-//                 final payload = first.payload;
-//                 if (payload.isNotEmpty) {
-//                   final status = payload[0];
-//                   final languageCodeLength = status & 0x3F;
-//                   final textBytes = payload.sublist(1 + languageCodeLength);
-//                   text = utf8.decode(textBytes);
-//                 }
-//               }
-//               // Fallback: try to treat payload as UTF-8
-//               text ??= utf8.decode(first.payload, allowMalformed: true);
-//               completer.complete(text.trim());
-//             } else {
-//               completer.complete(null);
-//             }
-//           } else {
-//             completer.complete(null);
-//           }
-//         } catch (e) {
-//           print('NFC Read error: $e');
-//           completer.completeError(e);
-//         } finally {
-//           NfcManager.instance.stopSession();
-//         }
-//       },
-//       alertMessageIos: 'Hold your device near the NFC tag',
-//     );
-
-//     // Optional timeout to avoid dangling sessions
-//     return completer.future.timeout(
-//       const Duration(seconds: 20),
-//       onTimeout: () {
-//         NfcManager.instance.stopSession(errorMessageIos: 'Scan timed out');
-//         return null;
-//       },
-//     );
-//   }
-
-//   /// Write plain text to NFC tag
-//   Future<bool> writeNfcTag(String text) async {
-//     if (!await NfcManager.instance.isAvailable()) return false;
-
-//     bool success = false;
-
-//     await NfcManager.instance.startSession(
-//       pollingOptions: {NfcPollingOption.iso14443},
-//       onDiscovered: (NfcTag tag) async {
-//         try {
-//           final ndef = Ndef.from(tag);
-//           if (ndef == null || !ndef.isWritable) {
-//             print('Tag is not writable');
-//             NfcManager.instance.stopSession(
-//               errorMessageIos: 'Tag is not writable',
-//             );
-//             return;
-//           }
-
-//           final languageCode = 'en';
-//           final languageCodeBytes = utf8.encode(languageCode);
-//           final textBytes = utf8.encode(text);
-
-//           final statusByte = languageCodeBytes.length;
-
-//           final payload = <int>[statusByte, ...languageCodeBytes, ...textBytes];
-
-//           final payloadUint8 = Uint8List.fromList(payload);
-
-//           final record = NdefRecord(
-//             typeNameFormat: TypeNameFormat.wellKnown,
-//             type: Uint8List.fromList(utf8.encode('T')),
-//             identifier: Uint8List.fromList(utf8.encode('T')),
-//             payload: payloadUint8,
-//           );
-//           await ndef.write(message: NdefMessage(records: [record]));
-
-//           success = true;
-//           NfcManager.instance.stopSession();
-//         } catch (e) {
-//           print('NFC Write error: $e');
-//           NfcManager.instance.stopSession(errorMessageIos: e.toString());
-//         }
-//       },
-//       alertMessageIos: 'Hold your device near the NFC tag to write',
-//     );
-
-//     return success;
-//   }
-// }
- 
-
 class NfcService {
   /// Reads plain text from an NFC tag
   Future<String?> scanNfcTag({
@@ -127,6 +18,11 @@ class NfcService {
       print("NFC is not available on this device");
       return null;
     }
+
+    // Always try to stop any previous session before starting a new one
+    try {
+      await NfcManager.instance.stopSession();
+    } catch (_) {}
 
     final completer = Completer<String?>();
 
@@ -139,6 +35,9 @@ class NfcService {
           if (ndef?.cachedMessage?.records.isNotEmpty ?? false) {
             final record = ndef!.cachedMessage!.records.first;
             final text = _decodeTextRecord(record);
+
+            HapticFeedback.mediumImpact();
+
             completer.complete(text);
           } else {
             completer.complete(null);
@@ -169,6 +68,11 @@ class NfcService {
       print("NFC is not available on this device");
       return false;
     }
+
+    // Always try to stop any previous session before starting a new one
+    try {
+      await NfcManager.instance.stopSession();
+    } catch (_) {}
 
     bool success = false;
 

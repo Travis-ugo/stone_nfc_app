@@ -43,85 +43,103 @@ class _TokenManualPageState extends State<TokenManualPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Enter NFC Token')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Paste or type the NFC token to fetch the video.'),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _controller,
-                maxLength: 10, // Prevent more than 10 characters
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(10),
-                  TextInputFormatter.withFunction((oldValue, newValue) {
-                    return newValue.copyWith(
-                      text: newValue.text.toUpperCase(),
-                      selection: newValue.selection,
-                    );
-                  }),
-                ],
+    return BlocListener<HomeBloc, HomeState>(
+      listenWhen: (prev, curr) => prev.status != curr.status,
+      listener: (context, state) {
+        if (state.status == HomeStatus.failure && state.errorMessage != null) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Enter NFC Token')),
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Paste or type the NFC token to fetch the video.'),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _controller,
+                  maxLength: 10, // Prevent more than 10 characters
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(10),
+                    TextInputFormatter.withFunction((oldValue, newValue) {
+                      return newValue.copyWith(
+                        text: newValue.text.toUpperCase(),
+                        selection: newValue.selection,
+                      );
+                    }),
+                  ],
 
-                decoration: InputDecoration(
-                  labelText: 'NFC Token',
-                  // border: OutlineInputBorder(),
-                  counterText: "", // Hide counter under
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16).w,
-                    borderSide: const BorderSide(
-                      color: RedColors.red_500,
-                      width: 1,
+                  decoration: InputDecoration(
+                    labelText: 'NFC Token',
+                    // border: OutlineInputBorder(),
+                    counterText: "", // Hide counter under
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16).w,
+                      borderSide: const BorderSide(
+                        color: RedColors.red_500,
+                        width: 1,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16).w,
+                      borderSide: const BorderSide(
+                        color: GreyColors.grey_400,
+                        width: 1,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16).w,
+                      borderSide: const BorderSide(
+                        color: GreyColors.grey_400,
+                        width: 1,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16).w,
+                      borderSide: const BorderSide(
+                        color: GreyColors.grey_400,
+                        width: 1,
+                      ),
                     ),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16).w,
-                    borderSide: const BorderSide(
-                      color: GreyColors.grey_400,
-                      width: 1,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16).w,
-                    borderSide: const BorderSide(
-                      color: GreyColors.grey_400,
-                      width: 1,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16).w,
-                    borderSide: const BorderSide(
-                      color: GreyColors.grey_400,
-                      width: 1,
-                    ),
+
+                  textInputAction: TextInputAction.done,
+                  validator: (v) {
+                    if (v == null || v.trim().isEmpty) {
+                      return 'Token is required';
+                    }
+                    if (v.trim().length < 10) {
+                      return 'Token must be exactly 10 characters';
+                    }
+                    return null;
+                  },
+                  onFieldSubmitted: (_) => _submit(),
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: BlocBuilder<HomeBloc, HomeState>(
+                    builder: (context, state) {
+                      return PrimaryButton(
+                        onTap: state.status == HomeStatus.loading
+                            ? null
+                            : _submit,
+                        buttonTitle: state.status == HomeStatus.loading
+                            ? 'Submitting…'
+                            : 'Continue',
+                      );
+                    },
                   ),
                 ),
-
-                textInputAction: TextInputAction.done,
-                validator: (v) {
-                  if (v == null || v.trim().isEmpty) {
-                    return 'Token is required';
-                  }
-                  if (v.trim().length < 10) {
-                    return 'Token must be exactly 10 characters';
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (_) => _submit(),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: PrimaryButton(
-                  onTap: (!_isValidLength || _submitting) ? null : _submit,
-                  buttonTitle: _submitting ? 'Submitting…' : 'Continue',
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
