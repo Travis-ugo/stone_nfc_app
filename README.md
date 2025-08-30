@@ -179,8 +179,8 @@ Full list of tools (dependencies) is in the pubspec.yaml files (configuration fi
    │   └── storage_repository/
    ├── 🧪 test/                     # Unit & widget tests
    └── 📜 pubspec.yaml              # Flutter dependencies & assets config
-
-
+   ```
+   
 ---
 
 ## How to Use the App
