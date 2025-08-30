@@ -152,31 +152,34 @@ Full list of tools (dependencies) is in the pubspec.yaml files (configuration fi
 
 ## 📂 Folder Structure
 
+
+   ```plaintext
    tag_play/
-   ├── 📱 android/                 # Android-specific setup (e.g., permissions for NFC)
-   ├── 🍏 ios/                     # iOS-specific setup (e.g., app icons)
+   ├── 📱 android/                # Android-specific setup
+   ├── 🍏 ios/                     # iOS-specific setup
    ├── 🎨 assets/                  # Images, icons, fonts, etc.
-   │   ├── images/                 # Pictures used in the app (e.g., logos)
-   │   ├── icons/                  # Small icons for buttons
-   │   └── fonts/                  # Custom fonts like Poppins for text styling
+   │   ├── images/
+   │   ├── icons/
+   │   └── fonts/
    ├── 💻 lib/                     # Main application code
-   │   ├── core/                   # Basic setup: colors, themes, constants
-   │   ├── data/                   # Connections to data sources like Firebase
-   │   ├── domain/                 # Business rules (e.g., how to generate tokens)
-   │   ├── presentation/           # What you see: screens and user interface
-   │   │   ├── app/                # Starting point and navigation
-   │   │   ├── home/               # Main home screen
-   │   │   ├── scan/               # NFC scanning and code entry screen
-   │   │   ├── video/              # Video playback and history list
-   │   │   └── profile/            # Profile editing screen
-   │   └── main.dart               # The file that launches the app
-   ├── 📦 packages/                # Reusable toolkits
-   │   ├── authentication_repository/  # Login and user management
-   │   ├── cache/                  # Temporary storage on device
-   │   ├── form_inputs/            # Form helpers (e.g., password strength)
-   │   └── storage_repository/     # Data handling for videos and history
-   ├── 🧪 test/                    # Tests to ensure the app works correctly
-   └── 📜 pubspec.yaml             # List of tools and configs for the app
+   │   ├── core/                   # Core utilities, constants, themes
+   │   ├── data/                   # Data sources, repositories
+   │   ├── domain/                 # Entities, use cases (business logic)
+   │   ├── presentation/           # UI layer (widgets, screens, blocs)
+   │   │   ├── app/                # App entry, routes, main bloc observer
+   │   │   ├── home/               # Home screen
+   │   │   ├── scan/               # NFC scanning + manual token entry
+   │   │   ├── video/              # Video player & watch history
+   │   │   └── profile/            # User profile management
+   │   └── main.dart               # Application entry point
+   ├── 📦 packages/                 # Reusable packages (mini-libraries)
+   │   ├── authentication_repository/
+   │   ├── cache/
+   │   ├── form_inputs/
+   │   └── storage_repository/
+   ├── 🧪 test/                     # Unit & widget tests
+   └── 📜 pubspec.yaml              # Flutter dependencies & assets config
+
 
 ---
 
