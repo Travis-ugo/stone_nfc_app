@@ -1,25 +1,21 @@
 import 'dart:convert';
 import 'dart:async';
-import 'dart:typed_data';
-
 import 'package:nfc_manager/ndef_record.dart';
 import 'package:nfc_manager/nfc_manager.dart';
-
 import 'package:nfc_manager_ndef/nfc_manager_ndef.dart';
 
 import 'package:tag_play/core/core.dart';
 
 class NfcService {
-  /// Reads plain text from an NFC tag
+  /// Reads plain text from an NFC tag (only NDEF supported)
   Future<String?> scanNfcTag({
     Duration timeout = const Duration(seconds: 20),
   }) async {
     if (!await NfcManager.instance.isAvailable()) {
-      print("NFC is not available on this device");
-      return null;
+      throw Exception("NFC is not available on this device");
     }
 
-    // Always try to stop any previous session before starting a new one
+    // Stop any previous session first
     try {
       await NfcManager.instance.stopSession();
     } catch (_) {}
@@ -32,18 +28,29 @@ class NfcService {
       onDiscovered: (NfcTag tag) async {
         try {
           final ndef = Ndef.from(tag);
-          if (ndef?.cachedMessage?.records.isNotEmpty ?? false) {
-            final record = ndef!.cachedMessage!.records.first;
+
+          if (ndef == null) {
+            throw Exception("Unsupported NFC tag (not NDEF)");
+          }
+
+          if (ndef.cachedMessage?.records.isNotEmpty ?? false) {
+            final record = ndef.cachedMessage!.records.first;
             final text = _decodeTextRecord(record);
 
-            HapticFeedback.mediumImpact();
+            if (text == null) {
+              throw Exception("Failed to decode NDEF text record");
+            }
 
+            HapticFeedback.mediumImpact();
             completer.complete(text);
           } else {
-            completer.complete(null);
+            throw Exception("Empty NFC tag (no records found)");
           }
         } catch (e) {
           completer.completeError(e);
+          await NfcManager.instance
+              .stopSession(errorMessageIos: e.toString());
+          return;
         } finally {
           await NfcManager.instance.stopSession();
         }
@@ -59,22 +66,21 @@ class NfcService {
     );
   }
 
-  /// Writes plain text to an NFC tag
+  /// Writes plain text to an NFC tag (only NDEF supported)
   Future<bool> writeNfcTag(
     String text, {
     Duration timeout = const Duration(seconds: 20),
   }) async {
     if (!await NfcManager.instance.isAvailable()) {
-      print("NFC is not available on this device");
-      return false;
+      throw Exception("NFC is not available on this device");
     }
 
-    // Always try to stop any previous session before starting a new one
+    // Stop any previous session first
     try {
       await NfcManager.instance.stopSession();
     } catch (_) {}
 
-    bool success = false;
+    final completer = Completer<bool>();
 
     await NfcManager.instance.startSession(
       pollingOptions: {NfcPollingOption.iso14443},
@@ -83,25 +89,31 @@ class NfcService {
         try {
           final ndef = Ndef.from(tag);
 
-          if (ndef == null || !ndef.isWritable) {
+          if (ndef == null) {
+            throw Exception("Unsupported NFC tag (not NDEF)");
+          }
+
+          if (!ndef.isWritable) {
             throw Exception("Tag is not writable");
           }
 
           final record = _createTextRecord(text);
           await ndef.write(message: NdefMessage(records: [record]));
 
-          success = true;
+          HapticFeedback.mediumImpact();
+          completer.complete(true);
         } catch (e) {
-          print("NFC write error: $e");
-          await NfcManager.instance.stopSession(errorMessageIos: e.toString());
+          completer.completeError(e);
+          await NfcManager.instance
+              .stopSession(errorMessageIos: e.toString());
+          return;
         } finally {
           await NfcManager.instance.stopSession();
         }
       },
     );
 
-    // Add a timeout safeguard
-    return Future.value(success).timeout(
+    return completer.future.timeout(
       timeout,
       onTimeout: () {
         NfcManager.instance.stopSession(errorMessageIos: 'Write timed out');
@@ -115,13 +127,10 @@ class NfcService {
     final langBytes = utf8.encode(languageCode);
     final textBytes = utf8.encode(text);
 
-    // Total length = 1 byte for lang length + lang bytes + text bytes
-    final totalLength = 1 + langBytes.length + textBytes.length;
-
-    final payload = Uint8List(totalLength);
+    final payload = Uint8List(1 + langBytes.length + textBytes.length);
     payload[0] = langBytes.length;
     payload.setRange(1, 1 + langBytes.length, langBytes);
-    payload.setRange(1 + langBytes.length, totalLength, textBytes);
+    payload.setRange(1 + langBytes.length, payload.length, textBytes);
 
     return NdefRecord(
       typeNameFormat: TypeNameFormat.wellKnown,

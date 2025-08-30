@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1362674123-f2mir5e7nes712idh9qqlt98kt288gvn.apps.googleusercontent.com</string>
+	<string>29525038810-u6fsr35e914jklef1b57dn475fksrg3l.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1362674123-f2mir5e7nes712idh9qqlt98kt288gvn</string>
+	<string>com.googleusercontent.apps.29525038810-u6fsr35e914jklef1b57dn475fksrg3l</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>1362674123-o1in9hln81cetfoh5t5m6ij4o8lr4snm.apps.googleusercontent.com</string>
+	<string>29525038810-ua7ba6vjsj78svufhli0qo6tf63g2oq5.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAdcedQ-DxC3E5AxCHWplXxPEXH64iVp-0</string>
+	<string>AIzaSyCD_Hg4etmieNH9QVDe2F0kTAMI8s-GUt4</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1362674123</string>
+	<string>29525038810</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.stone.nfc</string>
 	<key>PROJECT_ID</key>
-	<string>driven-development-3e69a</string>
+	<string>e-stone2</string>
 	<key>STORAGE_BUCKET</key>
-	<string>driven-development-3e69a.appspot.com</string>
+	<string>e-stone2.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1362674123:ios:e75bcef10f84345fff364e</string>
+	<string>1:29525038810:ios:c3919da282061c1c88b7e3</string>
 </dict>
 </plist>

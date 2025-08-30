@@ -79,7 +79,7 @@
 		<key>UIStatusBarHidden</key>
 		<false/>
 		<key>GIDClientID</key>
-		<string>1362674123-f2mir5e7nes712idh9qqlt98kt288gvn.apps.googleusercontent.com</string>
+		<string>29525038810-u6fsr35e914jklef1b57dn475fksrg3l.apps.googleusercontent.com</string>
 		<key>CFBundleURLTypes</key>
 		<array>
 			<dict>
@@ -87,7 +87,7 @@
 				<string>Editor</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<string>com.googleusercontent.apps.1362674123-f2mir5e7nes712idh9qqlt98kt288gvn</string>
+					<string>com.googleusercontent.apps.29525038810-u6fsr35e914jklef1b57dn475fksrg3l</string>
 				</array>
 			</dict>
 		</array>

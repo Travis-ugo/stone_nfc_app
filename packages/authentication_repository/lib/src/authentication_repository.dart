@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
+import 'package:storage_repository/storage_repository.dart';
 
 /// {@template sign_up_with_email_and_password_failure}
 /// Thrown during the sign up process if a failure occurs.
@@ -156,13 +157,16 @@ class AuthenticationRepository {
     CacheClient? cache,
     firebase_auth.FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
+    required StorageDataSourceImpl storageDataSource,
   }) : _cache = cache ?? CacheClient(),
        _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
-       _googleSignIn = googleSignIn ?? GoogleSignIn.instance;
+       _googleSignIn = googleSignIn ?? GoogleSignIn.instance,
+       _storageDataSource = storageDataSource;
 
   final CacheClient _cache;
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
+  final StorageDataSourceImpl _storageDataSource;
 
   /// Whether or not the current environment is web
   /// Should only be overridden for testing purposes. Otherwise,
@@ -198,10 +202,27 @@ class AuthenticationRepository {
   /// Throws a [SignUpWithEmailAndPasswordFailure] if an exception occurs.
   Future<void> signUp({required String email, required String password}) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
+      final cred = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      final uid = cred.user!.uid;
+
+      // 🔍 Check if profile already exists before saving
+      final existingProfile = await _storageDataSource.getUserProfile(
+        userId: uid,
+      );
+      if (existingProfile == null) {
+        await _storageDataSource.saveUserProfile(
+          profile: UserProfileModel(
+            userId: uid,
+            displayName: '',
+            email: email,
+            photoUrl: '',
+          ),
+        );
+      }
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
@@ -253,6 +274,22 @@ class AuthenticationRepository {
 
       print('[GoogleAuth] Signing in to Firebase...');
       final result = await _firebaseAuth.signInWithCredential(credential);
+      final uid = result.user!.uid;
+
+      // 🔍 Check if profile exists
+      final existingProfile = await _storageDataSource.getUserProfile(
+        userId: uid,
+      );
+      if (existingProfile == null) {
+        await _storageDataSource.saveUserProfile(
+          profile: UserProfileModel(
+            userId: uid,
+            displayName: result.user?.displayName ?? '',
+            email: result.user?.email,
+            photoUrl: result.user?.photoURL ?? '',
+          ),
+        );
+      }
       print(
         '[GoogleAuth] Firebase sign-in successful. User: ${result.user?.email}',
       );

@@ -43,6 +43,17 @@ abstract class UserProfileEntity with _$UserProfileEntity {
 
   factory UserProfileEntity.fromJson(Map<String, dynamic> json) =>
       _$UserProfileEntityFromJson(json);
+
+      static const empty = UserProfileEntity(
+        userId: '',
+        displayName: '',
+        email: '',
+        photoUrl: '',
+        phoneNumber: '',
+        dateOfBirth: null,
+        gender: '',
+        lastLoginAt: null,
+      );
 }
 
 /// Converts Firestore [Timestamp] <-> [DateTime]

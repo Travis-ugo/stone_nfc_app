@@ -4,9 +4,21 @@ import 'package:image_picker/image_picker.dart';
 import 'package:storage_repository/storage_repository.dart';
 import 'package:tag_play/core/core.dart';
 import 'package:iconsax_linear/iconsax_linear.dart';
+import 'package:tag_play/features/profile/bloc/profile_bloc.dart';
 
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({super.key});
+  final String? userId;
+  final String? currentName;
+  final String? currentPhotoUrl;
+  final String? currentEmail;
+
+  const EditProfilePage({
+    super.key,
+    this.userId,
+    this.currentName,
+    this.currentPhotoUrl,
+    this.currentEmail,
+  });
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
@@ -22,13 +34,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
   bool _saving = false;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final params = GoRouterState.of(context).extra as Map<String, dynamic>?;
-    _userId = params?['userId'] as String?;
-    _nameController = TextEditingController(text: params?['currentName'] as String? ?? '');
-    _photoUrl = params?['currentPhotoUrl'] as String?;
-    _currentEmail = params?['currentEmail'] as String?;
+  void initState() {
+    super.initState();
+    _userId = widget.userId;
+    _photoUrl = widget.currentPhotoUrl;
+    _currentEmail = widget.currentEmail;
+    _nameController = TextEditingController(text: widget.currentName ?? '');
   }
 
   Future<void> _pickImage() async {
@@ -54,6 +65,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           _pickedImage!.path,
           refPath,
         );
+        context.read<ProfileBloc>().add(ProfileRequested(_userId!));
       } catch (e) {
         ScaffoldMessenger.of(
           context,
@@ -84,18 +96,30 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    print(_nameController.text);
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text('Edit Profile', style: TextStyle(color: GreyColors.grey_400, fontWeight: FontWeightMade.semiBold)),
+        title: Text(
+          'Edit Profile',
+          style: TextStyle(
+            color: GreyColors.grey_400,
+            fontWeight: FontWeightMade.semiBold,
+          ),
+        ),
         backgroundColor: Colors.black,
         foregroundColor: Theme.of(context).colorScheme.onBackground,
         elevation: 0,
-        iconTheme: IconThemeData(color: GreyColors.grey_400,),
-        leading:
-         IconButton(onPressed: () {
-          context.pop();
-        }, icon: SvgPicture.asset('assets/icons/arrow-left.svg', color: WhiteColors.white_100,)),
+        iconTheme: IconThemeData(color: GreyColors.grey_400),
+        leading: IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: SvgPicture.asset(
+            'assets/icons/arrow-left.svg',
+            color: WhiteColors.white_100,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -122,27 +146,31 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               ),
                             )
                           : (_photoUrl != null && _photoUrl!.isNotEmpty)
-                              ? ClipOval(
-                                  child: CachedNetworkImage(
-                                    imageUrl: _photoUrl!,
-                                    width: 108,
-                                    height: 108,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => const CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) => Icon(Icons.error, color: Colors.red),
-                                  ),
-                                )
-                              : Center(
-                                  child: Text(
-                                    (_currentEmail?.isNotEmpty ?? false)
-                                        ? _currentEmail![0].toUpperCase()
-                                        : 'U',
-                                    style: TextStyle(
-                                      fontSize: 40,
-                                      color: Theme.of(context).colorScheme.onBackground,
-                                    ),
-                                  ),
+                          ? ClipOval(
+                              child: CachedNetworkImage(
+                                imageUrl: _photoUrl!,
+                                width: 108,
+                                height: 108,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error, color: Colors.red),
+                              ),
+                            )
+                          : Center(
+                              child: Text(
+                                (_currentEmail?.isNotEmpty ?? false)
+                                    ? _currentEmail![0].toUpperCase()
+                                    : 'U',
+                                style: TextStyle(
+                                  fontSize: 40,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onBackground,
                                 ),
+                              ),
+                            ),
                     ),
                     Positioned(
                       bottom: 4,
@@ -166,7 +194,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(height: 24),
               TextFormField(
                 controller: _nameController,
-                style: TextStyle(color: Theme.of(context).colorScheme.onBackground, fontSize: 18),
+                style: TextStyle(color: WhiteColors.white_100, fontSize: 18),
                 decoration: InputDecoration(
                   labelText: 'Display Name',
                   labelStyle: TextStyle(color: Colors.grey[400]),
@@ -176,9 +204,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
                 ),
-                validator: (v) => v == null || v.trim().isEmpty ? 'Name required' : null,
+                validator: (v) =>
+                    v == null || v.trim().isEmpty ? 'Name required' : null,
               ),
               const SizedBox(height: 32),
               PrimaryButton(

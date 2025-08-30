@@ -34,7 +34,7 @@ class WatchedHistoryPage extends StatelessWidget {
   }
 }
 
-class WatchedHistoryView extends StatelessWidget { 
+class WatchedHistoryView extends StatelessWidget {
   const WatchedHistoryView({super.key});
 
   @override
@@ -57,7 +57,11 @@ class WatchedHistoryView extends StatelessWidget {
             child: BlocBuilder<WatchedHistoryBloc, WatchedHistoryState>(
               builder: (context, state) {
                 if (state.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: GreyColors.grey_100,
+                    ),
+                  );
                 }
 
                 if (state.isFailure) {
@@ -97,16 +101,12 @@ class WatchedHistoryView extends StatelessWidget {
                           const VSpaceWidget(height: 16),
                           Text(
                             'No watch history yet',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onBackground,
-                            ),
+                            style: TextStyle(color: GreyColors.grey_200),
                           ),
                           const VSpaceWidget(height: 8),
                           Text(
                             'Videos you watch will appear here',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
+                            style: TextStyle(color: GreyColors.grey_200),
                           ),
                         ],
                       ),

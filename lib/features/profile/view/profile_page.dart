@@ -1,7 +1,6 @@
-import 'package:storage_repository/storage_repository.dart';
 import 'package:tag_play/presentation/app/bloc/app_bloc.dart';
 import '../../../core/core.dart';
-import '../profile_bloc.dart';
+import '../bloc/profile_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -9,7 +8,6 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.select((AppBloc bloc) => bloc.state.user);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -26,11 +24,7 @@ class ProfilePage extends StatelessWidget {
         elevation: 0,
       ),
       backgroundColor: Colors.black,
-      body: BlocProvider(
-        create: (context) => ProfileBloc(storageRepository: context.read<StorageRepositoryImpl>())
-          ..add(ProfileRequested(user.id)),
-        child: const ProfileView(),
-      ),
+      body: const ProfileView(),
     );
   }
 }
@@ -43,9 +37,9 @@ class ProfileView extends StatelessWidget {
     final user = context.select((AppBloc bloc) => bloc.state.user);
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
-        if (state is ProfileLoading) {
+        if (state.status == ProfileStatus.loading) {
           return const Center(child: CircularProgressIndicator());
-        } else if (state is ProfileLoaded) {
+        } else if (state.status == ProfileStatus.loaded) {
           final profile = state.profile;
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
@@ -53,7 +47,8 @@ class ProfileView extends StatelessWidget {
               children: [
                 const SizedBox(height: 20),
                 ProfileAvatar(
-                  name: profile.displayName ?? user.name ?? user.email ?? 'User',
+                  name:
+                      profile.displayName ?? user.name ?? user.email ?? 'User',
                   email: profile.email ?? user.email ?? '',
                   profileImage: profile.photoUrl ?? user.photo,
                 ),
@@ -71,14 +66,22 @@ class ProfileView extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-    
+
                             color: GreyColors.grey_100,
                           ),
                         ),
                         const SizedBox(height: 16),
-                        _buildInfoRow(context, 'Display Name', profile.displayName ?? '-'),
+                        _buildInfoRow(
+                          context,
+                          'Display Name',
+                          profile.displayName ?? '-',
+                        ),
                         _buildInfoRow(context, 'Email', profile.email ?? '-'),
-                        _buildInfoRow(context, 'Phone', profile.phoneNumber ?? '- - - - - - - -'),
+                        _buildInfoRow(
+                          context,
+                          'Phone',
+                          profile.phoneNumber ?? '- - - - - - - -',
+                        ),
                       ],
                     ),
                   ),
@@ -88,8 +91,13 @@ class ProfileView extends StatelessWidget {
               ],
             ),
           );
-        } else if (state is ProfileError) {
-          return Center(child: Text('Error: \\${state.message}', style: TextStyle(color: Theme.of(context).colorScheme.error)));
+        } else if (state.status == ProfileStatus.error) {
+          return Center(
+            child: Text(
+              'Error: \\${state.message}',
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          );
         }
         return const SizedBox();
       },
@@ -102,8 +110,22 @@ class ProfileView extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontWeight: FontWeightMade.regular, color: GreyColors.grey_200, fontSize: FontSize.sm)),
-          Text(value, style: TextStyle(fontWeight: FontWeightMade.medium, color: GreyColors.grey_500, fontSize: FontSize.sm)),
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeightMade.regular,
+              color: GreyColors.grey_200,
+              fontSize: FontSize.sm,
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontWeight: FontWeightMade.medium,
+              color: GreyColors.grey_500,
+              fontSize: FontSize.sm,
+            ),
+          ),
         ],
       ),
     );
@@ -137,7 +159,8 @@ class ProfileAvatar extends StatelessWidget {
                       width: 100,
                       height: 100,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => const CircularProgressIndicator(),
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
                       errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
                   ),
@@ -153,10 +176,20 @@ class ProfileAvatar extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             name,
-            style: TextStyle(fontSize: FontSize.xl, fontWeight: FontWeightMade.bold, color: GreyColors.grey_100),
+            style: TextStyle(
+              fontSize: FontSize.xl,
+              fontWeight: FontWeightMade.bold,
+              color: GreyColors.grey_100,
+            ),
           ),
           const SizedBox(height: 4),
-          Text(email, style: TextStyle(fontSize: FontSize.base, color: GreyColors.grey_400)),
+          Text(
+            email,
+            style: TextStyle(
+              fontSize: FontSize.base,
+              color: GreyColors.grey_400,
+            ),
+          ),
         ],
       ),
     );
@@ -168,58 +201,62 @@ class ProfileActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.select((AppBloc bloc) => bloc.state.user);
-    return Column(
-      children: [
-        _buildActionTile(
-          context,
-          icon: Icons.edit,
-          title: 'Edit Profile',
-          onTap: () {
-            context.pushNamed(
-              'edit_profile',
-              extra: {
-                'userId': user.id,
-                'currentName': user.name,
-                'currentPhotoUrl': user.photo,
-                'currentEmail': user.email,
+    // final user = context.select((AppBloc bloc) => bloc.state.user);
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      builder: (context, state) {
+        return Column(
+          children: [
+            _buildActionTile(
+              context,
+              icon: Icons.edit,
+              title: 'Edit Profile',
+              onTap: () {
+                context.pushNamed(
+                  'edit_profile',
+                  extra: {
+                    'userId':state.profile.userId,
+                    'currentName': state.profile.displayName,
+                    'currentPhotoUrl': state.profile.photoUrl,
+                    'currentEmail': state.profile.email,
+                  },
+                );
               },
-            );
-          },
-        ),
-        _buildActionTile(
-          context,
-          icon: Icons.notifications,
-          title: 'Notifications',
-          onTap: () {
-            // TODO: Navigate to notifications
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Notifications coming soon')),
-            );
-          },
-        ),
-        _buildActionTile(
-          context,
-          icon: Icons.help,
-          title: 'Help & Support',
-          onTap: () {
-            // TODO: Navigate to help
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Help & support coming soon')),
-            );
-          },
-        ),
-        const SizedBox(height: 16),
-        _buildActionTile(
-          context,
-          icon: Icons.logout,
-          title: 'Sign Out',
-          isDestructive: true,
-          onTap: () {
-            _showSignOutDialog(context);
-          },
-        ),
-      ],
+            ),
+            _buildActionTile(
+              context,
+              icon: Icons.notifications,
+              title: 'Notifications',
+              onTap: () {
+                // TODO: Navigate to notifications
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Notifications coming soon')),
+                );
+              },
+            ),
+            _buildActionTile(
+              context,
+              icon: Icons.help,
+              title: 'Help & Support',
+              onTap: () {
+                // TODO: Navigate to help
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Help & support coming soon')),
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            _buildActionTile(
+              context,
+              icon: Icons.logout,
+              title: 'Sign Out',
+              isDestructive: true,
+              onTap: () {
+                _showSignOutDialog(context);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

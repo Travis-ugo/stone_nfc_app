@@ -1,208 +1,48 @@
 {
   "project_info": {
-    "project_number": "1362674123",
-    "project_id": "driven-development-3e69a",
-    "storage_bucket": "driven-development-3e69a.appspot.com"
+    "project_number": "29525038810",
+    "project_id": "e-stone2",
+    "storage_bucket": "e-stone2.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1362674123:android:8825e37300107bcfff364e",
-        "android_client_info": {
-          "package_name": "com.example.smart_ix"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1362674123-uvnktvsub545uu2houegv92athf75g2s.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.smart_ix",
-            "certificate_hash": "a8485728787cafd5e4b3d5971c3e438affa90690"
-          }
-        },
-        {
-          "client_id": "1362674123-h32vpvov18o0t8f7lv48hhpge2e5281o.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDEqb5-TD28JhMDrf6poAPw3w16NcRhBxo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1362674123-h32vpvov18o0t8f7lv48hhpge2e5281o.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1362674123-7aokjd1ddnmq6edsgrksgr8m9cd9t8gu.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.projectkey.theKey"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1362674123:android:3734d1ca16e13554ff364e",
-        "android_client_info": {
-          "package_name": "com.example.the_key"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1362674123-o1in9hln81cetfoh5t5m6ij4o8lr4snm.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.the_key",
-            "certificate_hash": "8781398795299016c0519dd0871186caa446b489"
-          }
-        },
-        {
-          "client_id": "1362674123-h32vpvov18o0t8f7lv48hhpge2e5281o.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDEqb5-TD28JhMDrf6poAPw3w16NcRhBxo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1362674123-h32vpvov18o0t8f7lv48hhpge2e5281o.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1362674123-7aokjd1ddnmq6edsgrksgr8m9cd9t8gu.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.projectkey.theKey"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1362674123:android:63ca1271a77e0804ff364e",
-        "android_client_info": {
-          "package_name": "com.projectkey.the_Key"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1362674123-prbvgb8ivs5rkret6qdsllcmv06h4p1b.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.projectkey.the_Key",
-            "certificate_hash": "8781398795299016c0519dd0871186caa446b489"
-          }
-        },
-        {
-          "client_id": "1362674123-h32vpvov18o0t8f7lv48hhpge2e5281o.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDEqb5-TD28JhMDrf6poAPw3w16NcRhBxo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1362674123-h32vpvov18o0t8f7lv48hhpge2e5281o.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1362674123-7aokjd1ddnmq6edsgrksgr8m9cd9t8gu.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.projectkey.theKey"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1362674123:android:8947381cd6132b81ff364e",
-        "android_client_info": {
-          "package_name": "com.stone.anaconda"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1362674123-h32vpvov18o0t8f7lv48hhpge2e5281o.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDEqb5-TD28JhMDrf6poAPw3w16NcRhBxo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1362674123-h32vpvov18o0t8f7lv48hhpge2e5281o.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1362674123-7aokjd1ddnmq6edsgrksgr8m9cd9t8gu.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.projectkey.theKey"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1362674123:android:edeb24d8da842084ff364e",
+        "mobilesdk_app_id": "1:29525038810:android:a925027a98edb8d688b7e3",
         "android_client_info": {
           "package_name": "com.stone.nfc"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1362674123-h32vpvov18o0t8f7lv48hhpge2e5281o.apps.googleusercontent.com",
+          "client_id": "29525038810-ua7ba6vjsj78svufhli0qo6tf63g2oq5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stone.nfc",
+            "certificate_hash": "b672cf0a626655c7a25484fd120f47cb3b5cdd22"
+          }
+        },
+        {
+          "client_id": "29525038810-7hfkvojpb1oetqn0cdc75pes1h860rn2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDEqb5-TD28JhMDrf6poAPw3w16NcRhBxo"
+          "current_key": "AIzaSyCYbXZRednpkKqEbYztBfrBiLBxfxCVz5I"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1362674123-h32vpvov18o0t8f7lv48hhpge2e5281o.apps.googleusercontent.com",
+              "client_id": "29525038810-7hfkvojpb1oetqn0cdc75pes1h860rn2.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "1362674123-7aokjd1ddnmq6edsgrksgr8m9cd9t8gu.apps.googleusercontent.com",
+              "client_id": "29525038810-u6fsr35e914jklef1b57dn475fksrg3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.projectkey.theKey"
+                "bundle_id": "com.stone.nfc"
               }
             }
           ]

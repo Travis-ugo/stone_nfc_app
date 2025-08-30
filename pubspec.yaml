@@ -61,6 +61,8 @@ dependencies:
   # https://pub.dev/packages/path_provider
   video_compress: ^3.1.4
   # https://pub.dev/packages/video_compress
+  google_sign_in: ^7.1.1
+  # https://pub.dev/packages/google_sign_in 
   cupertino_icons: ^1.0.8
 
   # flutter_nfc_kit: ^3.6.0

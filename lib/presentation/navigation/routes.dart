@@ -62,9 +62,18 @@ class AppRouter {
         path: '/edit_profile',
         name: 'edit_profile',
         pageBuilder: (context, state) {
-          return MaterialPage(child: const EditProfilePage());
+          final params = state.extra as Map<String, dynamic>?;
+          return MaterialPage(
+            child: EditProfilePage(
+              userId: params?['userId'] as String?,
+              currentName: params?['currentName'] as String?,
+              currentPhotoUrl: params?['currentPhotoUrl'] as String?,
+              currentEmail: params?['currentEmail'] as String?,
+            ),
+          );
         },
       ),
+
       // Main navigation with bottom bar
       ShellRoute(
         builder: (context, state, child) {

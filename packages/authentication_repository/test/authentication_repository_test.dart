@@ -1,14 +1,16 @@
-// ignore_for_file: must_be_immutable
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cache/cache.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:storage_repository/storage_repository.dart';
 
 const _mockFirebaseUserUid = 'mock-uid';
 const _mockFirebaseUserEmail = 'mock-email';
@@ -16,6 +18,10 @@ const _mockFirebaseUserEmail = 'mock-email';
 class MockCacheClient extends Mock implements CacheClient {}
 
 class MockFirebaseAuth extends Mock implements firebase_auth.FirebaseAuth {}
+
+class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
+
+class MockFirebaseStorage extends Mock implements FirebaseStorage {}
 
 class MockFirebaseCore extends Mock
     with MockPlatformInterfaceMixin
@@ -47,6 +53,8 @@ void main() {
     late CacheClient cache;
     late firebase_auth.FirebaseAuth firebaseAuth;
     late GoogleSignIn googleSignIn;
+    late FirebaseStorage firebaseStorage;
+    late FirebaseFirestore firestore;
     late AuthenticationRepository authenticationRepository;
 
     setUpAll(() {
@@ -78,10 +86,18 @@ void main() {
       cache = MockCacheClient();
       firebaseAuth = MockFirebaseAuth();
       googleSignIn = MockGoogleSignIn();
+      firebaseStorage = MockFirebaseStorage();
+      firestore = MockFirebaseFirestore();
+
       authenticationRepository = AuthenticationRepository(
         cache: cache,
         firebaseAuth: firebaseAuth,
         googleSignIn: googleSignIn,
+        storageDataSource: StorageDataSourceImpl(
+          auth: firebaseAuth,
+          storage: firebaseStorage,
+          firestore: firestore,
+        ),
       );
     });
 
@@ -96,7 +112,7 @@ void main() {
             email: any(named: 'email'),
             password: any(named: 'password'),
           ),
-        ).thenAnswer((_) => Future.value(MockUserCredential()));
+        ).thenAnswer((_) async => MockUserCredential());
       });
 
       test('calls createUserWithEmailAndPassword', () async {
@@ -222,7 +238,7 @@ void main() {
             email: any(named: 'email'),
             password: any(named: 'password'),
           ),
-        ).thenAnswer((_) => Future.value(MockUserCredential()));
+        ).thenAnswer((_) async => MockUserCredential());
       });
 
       test('calls signInWithEmailAndPassword', () async {

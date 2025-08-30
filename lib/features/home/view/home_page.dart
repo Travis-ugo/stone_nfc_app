@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:storage_repository/storage_repository.dart';
 import 'package:tag_play/core/core.dart';
-import 'package:tag_play/features/profile/profile_bloc.dart';
+import 'package:tag_play/features/profile/bloc/profile_bloc.dart';
 import 'package:tag_play/features/watched_history/bloc/watched_history_bloc.dart';
 import 'package:tag_play/presentation/app/bloc/app_bloc.dart';
 import 'package:tag_play/features/home/bloc/home_bloc.dart';
@@ -142,6 +142,7 @@ class _HomeViewState extends State<HomeView> {
             child: SizedBox(),
           ),
           elevation: 0,
+
           actions: <Widget>[
             BlocBuilder<HomeBloc, HomeState>(
               buildWhen: (p, c) =>
